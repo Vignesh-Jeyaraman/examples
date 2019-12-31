@@ -1,0 +1,27 @@
+service: serve-dynamic-html-via-http-endpoint
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.7
+
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
+
+package:
+  exclude:
+    - venv/**
+    - node_modules/**
+    
+  individually: false
+
+
+functions:
+  landingPage:
+    handler: handler.landingPage
+    events:
+      - http:
+          method: post
+          path: test
