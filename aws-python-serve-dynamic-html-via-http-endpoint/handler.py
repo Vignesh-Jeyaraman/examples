@@ -1,5 +1,5 @@
 import json
-from app import testParsing
+from app import testParsing, loginView
 
 def landingPage(event, context):
     """
@@ -7,7 +7,8 @@ def landingPage(event, context):
         URL requested.
     """
     handler_mapping = {
-                        '/test': testParsing
+                        '/test': testParsing,
+                        '/login':loginView
                       }
     event_path = event.get('resource')
     response = handler_mapping[event_path](event, context)

@@ -2,10 +2,23 @@ import json
 import jwt
 from flask import Flask, render_template
 from base import LambdaBase
-from utils import sendErrorMessage, sendSuccessMessage
-from local import SECRET_KEY
-
+from utils import sendErrorMessage, sendSuccessMessage, sendAPISuccessResponse
+from local import SECRET_KEY, ADMIN_PASSWORD, ADMIN_USERNAME
+    
 app = Flask(__name__)
+
+class userLogin(LambdaBase):
+    """
+        Class to check whether login creds are valid or not
+    """
+    def handle(self, event, context):
+        api_body = json.loads(event["body"])
+        if 'username' not in api_body or 'password' not in api_body:
+            return sendErrorMessage(event = event, message="PLEASE PROVIDE USERNAME, EMAIL AND PASSWORD")
+        if api_body['username'] == ADMIN_USERNAME and api_body['password'] == ADMIN_PASSWORD:
+            token = jwt.encode({"username":api_body['username']}, SECRET_KEY)
+            return sendAPISuccessResponse(username=api_body['username'],token=token)
+        return sendErrorMessage(event = event, message="INVALID CREDENTIALS")
 
 class TestParsing(LambdaBase):
     """
@@ -27,3 +40,4 @@ class TestParsing(LambdaBase):
 
 # Call handler method based upon the routes.
 testParsing = TestParsing.get_handler()
+loginView = userLogin.get_handler()

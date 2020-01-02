@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template
 app = Flask(__name__)
 
@@ -28,3 +29,17 @@ def sendSuccessMessage(username):
         }
         return response
 
+def sendAPISuccessResponse(token, username):
+    print(token)
+    body = {
+        "username": username,
+        "token": token.decode('UTF-8')
+    }
+    response = {
+        "statusCode": 200,
+        "body": json.dumps({'data': body}),
+        "headers": {
+            'Content-Type': 'application/json',
+        }
+    }
+    return response
