@@ -15,7 +15,10 @@ class TestParsing(LambdaBase):
         # check whether Authorization token is there on header else send error message
         if 'Authorization' not in event['headers']:
             return sendErrorMessage(event=event,message="PLEASE PROVIDE AUTHORIZATION TOKEN ON HEADER TO CONTINUE")
-        creds = jwt.decode(event['headers']['Authorization'], SECRET_KEY)
+        try:
+            creds = jwt.decode(event['headers']['Authorization'], SECRET_KEY)
+        except:
+            return sendErrorMessage(event=event,message="INVALID TOKEN")
         # Decode the token and check whether we got email as well as username after decoding else send error message
         if 'email' not in  creds or 'username' not in creds:
             return sendErrorMessage(event=event,message="INVALID TOKEN")
