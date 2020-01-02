@@ -30,7 +30,9 @@ def sendSuccessMessage(username):
         return response
 
 def sendAPISuccessResponse(token, username):
-    print(token)
+    """
+        Function designed to throw success json response. 
+    """
     body = {
         "username": username,
         "token": token.decode('UTF-8')

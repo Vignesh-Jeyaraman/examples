@@ -12,12 +12,15 @@ class userLogin(LambdaBase):
         Class to check whether login creds are valid or not
     """
     def handle(self, event, context):
+        # load the json we got on request body
         api_body = json.loads(event["body"])
         if 'username' not in api_body or 'password' not in api_body:
             return sendErrorMessage(event = event, message="PLEASE PROVIDE USERNAME, EMAIL AND PASSWORD")
+        # check whether the username and password received matches the one stored in local.py
         if api_body['username'] == ADMIN_USERNAME and api_body['password'] == ADMIN_PASSWORD:
             token = jwt.encode({"username":api_body['username']}, SECRET_KEY)
             return sendAPISuccessResponse(username=api_body['username'],token=token)
+        # If issue with creds throw error.
         return sendErrorMessage(event = event, message="INVALID CREDENTIALS")
 
 class TestParsing(LambdaBase):
